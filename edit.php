@@ -7,6 +7,7 @@ if ($connection->connect_error) {
 echo "database is connected";
 
 
+
 if($_SERVER['REQUEST_METHOD']=="GET")
 {
     if(isset($_GET['edit']))
@@ -20,6 +21,10 @@ if($_SERVER['REQUEST_METHOD']=="GET")
         }
         $data=mysqli_fetch_assoc($result);
 
+    }
+    else
+    {
+        header("Location: task.php");
     }
 }
 
