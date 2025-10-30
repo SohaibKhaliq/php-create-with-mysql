@@ -1,97 +1,103 @@
 <?php
-$connection=new mysqli('localhost','root','201734','revision',3306);
-
-if($connection->connect_error)
-{
-    print "There is an error in connecting to Database";
+$connection = new mysqli('localhost', 'root', '201734', 'revision', 3306);
+if ($connection->connect_error) {
+    echo "there is an error in connecting to database";
     die();
 }
+echo "database is connected";
 
-echo "Database is Connected!";
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    $name = $_POST['name'];
+    $cnic = $_POST['cnic'];
+    $password = md5($_POST['password']);
+    $city = $_POST['city'];
 
-if($_SERVER['REQUEST_METHOD']=="POST")
-{
-    $name=$_POST['name'];
-    $cnic=$_POST['cnic'];
-    $password=md5($_POST['password']);
-    $city=$_POST['city'];
-
-    $query="insert into record(name,cnic,password,city)values('$name','$cnic','$password','$city')";
-
-    $outcome=mysqli_query($connection,$query);
-    if($outcome==true)
-    {
-        echo "Data is Inserted!!";
+    // print $name . '</br>' .$cnic . '</br>' .$password . '</br>' .$city . '</br>';
+    $sql = "insert into record(name,cnic,password,city)values('$name','$cnic','$password','$city')";
+    $result = mysqli_query($connection, $sql);
+    if ($result == true) {
+        echo "<script>alert('data is inserted')</script>";
+    } else {
+        echo "<script>alert('data is not inserted')</script>";
     }
 }
 
-$sql="select * from record";
+if ($_SERVER['REQUEST_METHOD'] == "GET") {
+    if (isset($_GET['delete'])) {
+        $id = $_GET['delete'];
+        $sql = "delete from record where id=$id";
+        $result = mysqli_query($connection, $sql);
+    }
+}
 
-$result=mysqli_query($connection,$sql);
-// var_dump($result);
+
+
+$sql = "select* from record";
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+}
+$result = mysqli_query($connection, $sql);
 $record;
-if($result->num_rows>0)
-{
-    while($row=$result->fetch_assoc())
-    {
-        $record[]=$row;
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $record[] = $row;
     }
-    
 }
-
+// var_dump($record);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PHP Create</title>
+    <title>PHP create</title>
 </head>
+
 <body>
     <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
-        <label for="name">Name</label>
-        <input type="text" name="name" id="name" placeholder="Enter Your Name!!">
-        <br>
-        <label for="cnic">CNIC</label>
-        <input type="text" name="cnic" id="cnic" placeholder="Enter Your CNIC!!">
-        <br>
-        <label for="password">Password</label>
-        <input type="text" name="password" id="password" placeholder="Enter Your password!!">
-        <br>
-        <label for="city">City</label>
-        <input type="text" name="city" id="city" placeholder="Enter Your city!!">
-        <br>
-
-        <input type="submit" value="Submit form!">
+        <label for="name">NAME</label>
+        <input type="text" name="name" id="name" placeholder="enter your name">
+        </br>
+        </br>
+        <label for="cnic">cnic</label>
+        <input type="text" name="cnic" id="cnic" placeholder="enter your cnic">
+        </br>
+        </br>
+        <label for="password">password</label>
+        <input type="text" name="password" id="password" placeholder="enter your password">
+        </br>
+        </br>
+        <label for="city">city</label>
+        <input type="text" name="city" id="city" placeholder="enter your city">
+        </br>
+        </br>
+        <input type="submit" value="submit">
     </form>
-
-
     <table border="1">
         <th>ID</th>
-        <th>Name</th>
-        <th>CNIC</th>
+        <th>NAME</th>
+        <th>Cnic</th>
         <th>Password</th>
         <th>City</th>
+        <th>action</th>
         <?php
-        if(!empty($record))
-        {
-            foreach($record as $data)
-            {
+        if (!empty($record))
+            foreach ($record as $data) {
                 echo "<tr>";
-                echo "<td>". $data['id']."</td>";
-                echo "<td>". $data['name']."</td>";
-                echo "<td>". $data['cnic']."</td>";
-                echo "<td>". $data['password']."</td>";
-                echo "<td>". $data['city']."</td>";
+                echo "<td>" . $data['id'] . "</td>";
+                echo "<td>" . $data['name'] . "</td>";
+                echo "<td>" . $data['cnic'] . "</td>";
+                echo "<td>" . $data['password'] . "</td>";
+                echo "<td>" . $data['city'] . "</td>";
+                echo "<td>" . "<a href='?delete=" . $data['id'] . "'>delete</a>" . "</td>";
                 echo "</tr>";
             }
-        }
-        else
-        {
-            echo "No Record is Found!";
+        else {
+            echo "no record is found";
         }
         ?>
     </table>
+
 </body>
+
 </html>
