@@ -89,6 +89,7 @@ if ($result->num_rows > 0) {
                 echo "<td>" . $data['cnic'] . "</td>";
                 echo "<td>" . $data['password'] . "</td>";
                 echo "<td>" . $data['city'] . "</td>";
+                echo "<td>" . "<a href='edit.php?edit=" . $data['id'] . "'>Edit</a>" . "</td>";
                 echo "<td>" . "<a href='?delete=" . $data['id'] . "'>delete</a>" . "</td>";
                 echo "</tr>";
             }
